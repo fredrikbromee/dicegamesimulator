@@ -70,5 +70,15 @@ export const exampleStrategies = [
         return gameState.turnScore < 15;
       }
     }`
+  },
+  {
+    name: "Roll Count Strategy",
+    strategy: `(gameState) => {
+      // Stop after 3 rolls unless we have a low score
+      if (gameState.rollCount >= 3) {
+        return gameState.turnScore < 15;  // Only continue if score is very low
+      }
+      return gameState.turnScore < 20;    // Normal threshold for early rolls
+    }`
   }
 ]; 

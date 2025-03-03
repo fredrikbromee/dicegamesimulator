@@ -15,9 +15,11 @@ class DiceGame {
   executeTurn(strategyFn) {
     let turnScore = 0;
     let keepRolling = true;
+    let rollCount = 0;  // Track number of rolls in this turn
 
     while (keepRolling) {
       const roll = this.rollDie();
+      rollCount++;  // Increment roll count
 
       if (roll === 1) {
         return 0; // Lost all points for this turn
@@ -30,7 +32,8 @@ class DiceGame {
         myScore: this.scores[this.currentPlayer],
         opponentScores: this.scores.filter((_, i) => i !== this.currentPlayer),
         turnScore: turnScore,
-        lastRoll: roll
+        lastRoll: roll,
+        rollCount: rollCount  // Add roll count to game state
       };
 
       try {

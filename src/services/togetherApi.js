@@ -13,6 +13,7 @@ Game State Properties:
 - opponentScores: Array of other players' scores
 - turnScore: Points accumulated in current turn
 - lastRoll: Most recent die roll value (2-6, since 1 ends the turn)
+- rollCount: Number of rolls made in the current turn (starts at 1)
 
 Rules:
 1. Return true to CONTINUE rolling, false to STOP
@@ -27,15 +28,15 @@ Rules:
    - Play safely: use lower X
    - Consider opponents: use gameState.opponentScores
    - End game: use (100 - gameState.myScore) for points needed
+   - Roll limits: use gameState.rollCount to limit consecutive rolls
 
 Example:
 (gameState) => {
-  // Stop at 20 points, but be aggressive if behind
-  const maxOpponentScore = Math.max(...gameState.opponentScores);
-  if (gameState.myScore < maxOpponentScore) {
-    return gameState.turnScore < 25;  // More aggressive
+  // Stop after 3 rolls or at 20 points
+  if (gameState.rollCount >= 3) {
+    return false;  // Stop rolling after 3 attempts
   }
-  return gameState.turnScore < 20;    // Normal play
+  return gameState.turnScore < 20;  // Otherwise use normal threshold
 }`;
 
   const userPrompt = `${systemPrompt}
@@ -108,9 +109,9 @@ The function must:
       
       // Test with various game states to catch common issues
       const testStates = [
-        { myScore: 50, opponentScores: [60], turnScore: 10, lastRoll: 4 },
-        { myScore: 90, opponentScores: [85], turnScore: 5, lastRoll: 3 },
-        { myScore: 20, opponentScores: [30], turnScore: 25, lastRoll: 6 }
+        { myScore: 50, opponentScores: [60], turnScore: 10, lastRoll: 4, rollCount: 2 },
+        { myScore: 90, opponentScores: [85], turnScore: 5, lastRoll: 3, rollCount: 1 },
+        { myScore: 20, opponentScores: [30], turnScore: 25, lastRoll: 6, rollCount: 4 }
       ];
       
       for (const state of testStates) {
@@ -139,4 +140,4 @@ The function must:
   }
 };
 
-export { generateStrategyCode }; 
+export { generateStrategyCode };
